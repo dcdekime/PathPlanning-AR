@@ -14,9 +14,13 @@
 		AD2A1FFD24A0653500B20B98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AD2A1FFC24A0653500B20B98 /* Assets.xcassets */; };
 		AD2A200024A0653500B20B98 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = AD2A1FFE24A0653500B20B98 /* LaunchScreen.storyboard */; };
 		AD842EDB24A7C68F0001161D /* AlgorithmOptionsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD842EDA24A7C68F0001161D /* AlgorithmOptionsController.swift */; };
-		AD84B18C24A585B60036EF1A /* GroundPlane.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD84B18B24A585B60036EF1A /* GroundPlane.swift */; };
+		AD84B18C24A585B60036EF1A /* Grid.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD84B18B24A585B60036EF1A /* Grid.swift */; };
 		ADB5B2DD24ADA14800BE50EC /* PriorityQueue.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB5B2DC24ADA14800BE50EC /* PriorityQueue.swift */; };
 		ADB5B2DF24ADAA2A00BE50EC /* Heap.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADB5B2DE24ADAA2A00BE50EC /* Heap.swift */; };
+		ADD87CBE24B6DEBF009D4046 /* AlgorithmStepper.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD87CBD24B6DEBF009D4046 /* AlgorithmStepper.swift */; };
+		ADD87CC024B6E084009D4046 /* AlgorithmHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD87CBF24B6E084009D4046 /* AlgorithmHandler.swift */; };
+		ADD87CC224B6E1D1009D4046 /* AlgorithmSimulator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD87CC124B6E1D1009D4046 /* AlgorithmSimulator.swift */; };
+		ADD87CC424B6E435009D4046 /* AlgorithmCommon.swift in Sources */ = {isa = PBXBuildFile; fileRef = ADD87CC324B6E435009D4046 /* AlgorithmCommon.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -29,9 +33,13 @@
 		AD2A1FFF24A0653500B20B98 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		AD2A200124A0653500B20B98 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		AD842EDA24A7C68F0001161D /* AlgorithmOptionsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmOptionsController.swift; sourceTree = "<group>"; };
-		AD84B18B24A585B60036EF1A /* GroundPlane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroundPlane.swift; sourceTree = "<group>"; };
+		AD84B18B24A585B60036EF1A /* Grid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Grid.swift; sourceTree = "<group>"; };
 		ADB5B2DC24ADA14800BE50EC /* PriorityQueue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PriorityQueue.swift; sourceTree = "<group>"; };
 		ADB5B2DE24ADAA2A00BE50EC /* Heap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Heap.swift; sourceTree = "<group>"; };
+		ADD87CBD24B6DEBF009D4046 /* AlgorithmStepper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmStepper.swift; sourceTree = "<group>"; };
+		ADD87CBF24B6E084009D4046 /* AlgorithmHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmHandler.swift; sourceTree = "<group>"; };
+		ADD87CC124B6E1D1009D4046 /* AlgorithmSimulator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmSimulator.swift; sourceTree = "<group>"; };
+		ADD87CC324B6E435009D4046 /* AlgorithmCommon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlgorithmCommon.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -64,8 +72,8 @@
 		AD2A1FF224A0653500B20B98 /* PathPlannerAR */ = {
 			isa = PBXGroup;
 			children = (
-				AD84B18924A5831F0036EF1A /* View */,
 				AD84B18D24A585C20036EF1A /* Model */,
+				AD84B18924A5831F0036EF1A /* View */,
 				AD84B18A24A583690036EF1A /* Controller */,
 				AD2A1FF324A0653500B20B98 /* AppDelegate.swift */,
 				AD2A1FF524A0653500B20B98 /* art.scnassets */,
@@ -96,9 +104,13 @@
 		AD84B18D24A585C20036EF1A /* Model */ = {
 			isa = PBXGroup;
 			children = (
-				AD84B18B24A585B60036EF1A /* GroundPlane.swift */,
-				ADB5B2DC24ADA14800BE50EC /* PriorityQueue.swift */,
+				ADD87CC324B6E435009D4046 /* AlgorithmCommon.swift */,
+				ADD87CBF24B6E084009D4046 /* AlgorithmHandler.swift */,
+				ADD87CC124B6E1D1009D4046 /* AlgorithmSimulator.swift */,
+				ADD87CBD24B6DEBF009D4046 /* AlgorithmStepper.swift */,
+				AD84B18B24A585B60036EF1A /* Grid.swift */,
 				ADB5B2DE24ADAA2A00BE50EC /* Heap.swift */,
+				ADB5B2DC24ADA14800BE50EC /* PriorityQueue.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -179,8 +191,12 @@
 				AD2A1FF824A0653500B20B98 /* ViewController.swift in Sources */,
 				ADB5B2DD24ADA14800BE50EC /* PriorityQueue.swift in Sources */,
 				ADB5B2DF24ADAA2A00BE50EC /* Heap.swift in Sources */,
+				ADD87CC424B6E435009D4046 /* AlgorithmCommon.swift in Sources */,
 				AD2A1FF424A0653500B20B98 /* AppDelegate.swift in Sources */,
-				AD84B18C24A585B60036EF1A /* GroundPlane.swift in Sources */,
+				AD84B18C24A585B60036EF1A /* Grid.swift in Sources */,
+				ADD87CC024B6E084009D4046 /* AlgorithmHandler.swift in Sources */,
+				ADD87CC224B6E1D1009D4046 /* AlgorithmSimulator.swift in Sources */,
+				ADD87CBE24B6DEBF009D4046 /* AlgorithmStepper.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
