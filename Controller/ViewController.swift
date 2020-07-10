@@ -13,6 +13,8 @@ import ARKit
 class ViewController: UIViewController, ARSCNViewDelegate
 {
     // member variables
+    @IBOutlet weak var algoButton1: UIButton!
+    @IBOutlet weak var algoButton2: UIButton!
     @IBOutlet weak var obstacleButtonDesign: UIButton!
     @IBOutlet weak var startButtonDesign: UIButton!
     @IBOutlet weak var goalButtonDesign: UIButton!
@@ -22,7 +24,7 @@ class ViewController: UIViewController, ARSCNViewDelegate
     
     var algorithmSelected = ""
     var heuristicSelected = ""
-    var gpObject = GroundPlane()
+    var gridObject = Grid()
     var selectedSphere: SCNNode?
 
     var groundPlaneFound = false
@@ -38,9 +40,11 @@ class ViewController: UIViewController, ARSCNViewDelegate
     {
         super.viewDidLoad()
         
+        addCoaching()
         // Set the view's delegate
         sceneView.delegate = self
         sceneView.debugOptions = [ARSCNDebugOptions.showFeaturePoints]
+        
         
         // Set view lighting
         sceneView.autoenablesDefaultLighting = true
@@ -53,7 +57,22 @@ class ViewController: UIViewController, ARSCNViewDelegate
         
         resetButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/icons8-reset-48.png"), for: .normal)
         
-//        generatePathButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/Start_37108.png"), for: .normal)
+        switch algorithmSelected
+        {
+           case "Breadth-First":
+                algoButton1.setTitle("Dijkstra's", for: .normal)
+                algoButton2.setTitle("A*", for: .normal)
+           case "Dijkstra's":
+               algoButton1.setTitle("Breadth-First", for: .normal)
+               algoButton2.setTitle("A*", for: .normal)
+           case "A*":
+               algoButton1.setTitle("Breadth-First", for: .normal)
+               algoButton2.setTitle("Dijkstra's", for: .normal)
+               
+           default:
+               algoButton1.setTitle("Dijkstra's", for: .normal)
+               algoButton2.setTitle("A*", for: .normal)
+       }
     }
     
     override func viewWillAppear(_ animated: Bool)
@@ -109,8 +128,8 @@ class ViewController: UIViewController, ARSCNViewDelegate
             node.addChildNode(planeNode)
             
             // create GroundPlane object
-            self.gpObject.setParams(groundPlaneAnchor: planeAnchor, groundPlaneNode: node)
-            self.gpObject.createPointCloud() // create spheres across ground plane
+            self.gridObject.setParams(groundPlaneAnchor: planeAnchor, groundPlaneNode: node)
+            self.gridObject.createPointCloud() // create spheres across ground plane
         }
         else
         {
@@ -140,20 +159,20 @@ class ViewController: UIViewController, ARSCNViewDelegate
         {
             if (self.startButtonPushed && !self.startNodeSelected)
             {
-                gpObject.placeStartPoint(selectedNode: selectedNode)
+                gridObject.placeStartPoint(selectedNode: selectedNode)
                 // reset boolean flags so that other nodes selected will not be affected
                 self.startNodeSelected = true
                 self.startButtonPushed = false
             }
             else if (self.goalButtonPushed && !self.goalNodeSelected)
             {
-                gpObject.placeGoalPoint(selectedNode: selectedNode)
+                gridObject.placeGoalPoint(selectedNode: selectedNode)
                 self.goalNodeSelected = true
                 self.goalButtonPushed = false
             }
             else if (self.obstacleButtonPushed && !self.obstacleNodeSelected)
             {
-                gpObject.placeObstacle(selectedNode: selectedNode)
+                gridObject.placeObstacle(selectedNode: selectedNode)
                 self.obstacleNodeSelected = true
                 self.obstacleButtonPushed = false
             }
@@ -162,7 +181,15 @@ class ViewController: UIViewController, ARSCNViewDelegate
                 return
             }
         }
-        
+    }
+    
+    func showAlert()
+    {
+        let alertController = UIAlertController(title: "Generate Path", message:
+            "Please select a start and a goal point", preferredStyle: .alert)
+        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+
+        self.present(alertController, animated: true, completion: nil)
     }
     
     // AR Button Logic
@@ -192,12 +219,12 @@ class ViewController: UIViewController, ARSCNViewDelegate
     
     func restartSession()
     {
-        self.gpObject = GroundPlane()
+        self.gridObject = Grid()    // create a new Grid
         groundPlaneFound = false
+        startNodeSelected = false
+        goalNodeSelected = false
         sceneView.session.pause()
-        sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in
-            node.removeFromParentNode()
-        }
+        sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in node.removeFromParentNode() }
         if let configuration = sceneView.session.configuration
         {
             sceneView.session.run(configuration,
@@ -207,8 +234,73 @@ class ViewController: UIViewController, ARSCNViewDelegate
     
     @IBAction func generatePath(_ sender: UIButton)
     {
-        gpObject.runSelectedAlgorithm(algorithm: algorithmSelected, heuristic: heuristicSelected)
+        if startNodeSelected && goalNodeSelected
+        {
+            //let algorithmStepper = AlgorithmStepper(currGrid: gridObject, heuristic: heuristicSelected)
+            // pass along current grid to algorithm handler
+            let algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: algorithmSelected, heuristic: heuristicSelected)
+            algoHandler.runSelectedAlgorithm()
+        }
+        else
+        {
+            showAlert()
+        }
+    }
+    
+    @IBAction func algorithmOverlay1(_ sender: UIButton)
+    {
+        print(sender.titleLabel!.text!)
+        if startNodeSelected && goalNodeSelected
+        {
+            //let algorithmStepper = AlgorithmStepper(currGrid: gridObject, heuristic: heuristicSelected)
+            // pass along current grid to algorithm handler
+            let algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: sender.titleLabel!.text!, heuristic: heuristicSelected)
+            algoHandler.runSelectedAlgorithm()
+        }
+        else
+        {
+            showAlert()
+        }
+        
+    }
+    
+    @IBAction func algorithmOverlay2(_ sender: UIButton)
+    {
+        print(sender.titleLabel!.text!)
+        if startNodeSelected && goalNodeSelected
+        {
+            //let algorithmStepper = AlgorithmStepper(currGrid: gridObject, heuristic: heuristicSelected)
+            // pass along current grid to algorithm handler
+            let algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: sender.titleLabel!.text!, heuristic: heuristicSelected)
+            algoHandler.runSelectedAlgorithm()
+        }
+        else
+        {
+            showAlert()
+        }
     }
     
     
+}
+
+extension ViewController: ARCoachingOverlayViewDelegate {
+  func addCoaching() {
+    // Create a ARCoachingOverlayView object
+    let coachingOverlay = ARCoachingOverlayView()
+    // Make sure it rescales if the device orientation changes
+    coachingOverlay.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+    coachingOverlay.center = self.sceneView.center
+    self.sceneView.addSubview(coachingOverlay)
+    // Set the Augmented Reality goal
+    coachingOverlay.goal = .horizontalPlane
+    // Set the ARSession
+    coachingOverlay.session = self.sceneView.session
+    // Set the delegate for any callbacks
+    coachingOverlay.delegate = self
+  }
+  // Example callback for the delegate object
+  func coachingOverlayViewDidDeactivate(_ coachingOverlayView: ARCoachingOverlayView)
+  {
+    print("DID THE COACHING THING!")
+  }
 }
