@@ -20,6 +20,8 @@ class ViewController: UIViewController, ARSCNViewDelegate
     @IBOutlet weak var goalButtonDesign: UIButton!
     @IBOutlet weak var resetButtonDesign: UIButton!
     @IBOutlet weak var generatePathButtonDesign: UIButton!
+    @IBOutlet weak var backButtonDesign: UIButton!
+    @IBOutlet weak var pathDetailsButtonDesign: UIButton!
     @IBOutlet var sceneView: ARSCNView!
     
     var algorithmSelected = ""
@@ -35,6 +37,10 @@ class ViewController: UIViewController, ARSCNViewDelegate
     var obstacleButtonPushed = false
     var obstacleNodeSelected = false
     
+    var bfsPathModel = PathModel()
+    var dijkstraPathModel = PathModel()
+    var aStarPathModel = PathModel()
+    
     
     override func viewDidLoad()
     {
@@ -49,6 +55,11 @@ class ViewController: UIViewController, ARSCNViewDelegate
         // Set view lighting
         sceneView.autoenablesDefaultLighting = true
         
+        let rightRecognizer = UISwipeGestureRecognizer(target: self, action:
+        #selector(swipeMade(_:)))
+           rightRecognizer.direction = .right
+        sceneView.addGestureRecognizer(rightRecognizer)
+        
         obstacleButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/icons8-home-page-48.png"), for: .normal)
         
         startButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/icons8-address-64.png"), for: .normal)
@@ -56,6 +67,10 @@ class ViewController: UIViewController, ARSCNViewDelegate
         goalButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/icons8-finish-flag-64.png"), for: .normal)
         
         resetButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/icons8-reset-48.png"), for: .normal)
+        
+        backButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/icons8-go-back-64.png"), for: .normal)
+        
+        pathDetailsButtonDesign.setBackgroundImage(UIImage(named: "art.scnassets/goForward.png"), for: .normal)
         
         switch algorithmSelected
         {
@@ -183,16 +198,145 @@ class ViewController: UIViewController, ARSCNViewDelegate
         }
     }
     
-    func showAlert()
+    @IBAction func swipeMade(_ sender: UISwipeGestureRecognizer)
     {
-        let alertController = UIAlertController(title: "Generate Path", message:
-            "Please select a start and a goal point", preferredStyle: .alert)
-        alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+        if sender.direction == .right
+        {
+            print("right swipe made")
+            performSegue(withIdentifier: "toAlgorithmOptions", sender: self)
+        }
+        else if sender.direction == .left
+        {
+            print("left swipe made")
+            
+        }
+    }
+    
+    func showAlert(errorCode: Int)
+    {
+        if errorCode == 0
+        {
+            let alertController = UIAlertController(title: "Generate Path", message:
+                "Please select a start and a goal point", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
 
-        self.present(alertController, animated: true, completion: nil)
+            self.present(alertController, animated: true, completion: nil)
+        }
+        else if errorCode == 1
+        {
+            let alertController = UIAlertController(title: "No Valid Path ", message:
+                "Please select new obstacle points", preferredStyle: .alert)
+            alertController.addAction(UIAlertAction(title: "Dismiss", style: .default))
+
+            self.present(alertController, animated: true, completion: nil)
+        }
+    }
+    
+    func goalFound(optimalPath: [SCNNode]) -> Bool
+    {
+        var goalFound = false
+        for optNode in optimalPath
+        {
+            if optNode.name! == "Goal"
+            {
+                goalFound = true
+            }
+        }
+        
+        return goalFound
+    }
+    
+    func setPathParameters(currPathModel: PathModel, algoSelected: String)
+    {
+        switch algoSelected
+         {
+            case "Breadth-First":
+                bfsPathModel.setPath(optPath: currPathModel.getPath())
+                bfsPathModel.setExploredLength(exploredLength: currPathModel.getExploredLength())
+                bfsPathModel.setFrontierLength(frontierLength: currPathModel.getFrontierLength())
+                if !goalFound(optimalPath: bfsPathModel.getPath())
+                {
+                    showAlert(errorCode: 1)
+                    restartSession()
+                }
+            case "Dijkstra's":
+                dijkstraPathModel.setPath(optPath: currPathModel.getPath())
+                dijkstraPathModel.setExploredLength(exploredLength: currPathModel.getExploredLength())
+                dijkstraPathModel.setFrontierLength(frontierLength: currPathModel.getFrontierLength())
+                if !goalFound(optimalPath: dijkstraPathModel.getPath())
+                {
+                    showAlert(errorCode: 1)
+                    restartSession()
+                }
+            case "A*":
+                aStarPathModel.setPath(optPath: currPathModel.getPath())
+                aStarPathModel.setExploredLength(exploredLength: currPathModel.getExploredLength())
+                aStarPathModel.setFrontierLength(frontierLength: currPathModel.getFrontierLength())
+                if !goalFound(optimalPath: aStarPathModel.getPath())
+                {
+                    showAlert(errorCode: 1)
+                    restartSession()
+                }
+            default:
+                aStarPathModel.setPath(optPath: currPathModel.getPath())
+                aStarPathModel.setExploredLength(exploredLength: currPathModel.getExploredLength())
+                aStarPathModel.setFrontierLength(frontierLength: currPathModel.getFrontierLength())
+                if !goalFound(optimalPath: aStarPathModel.getPath())
+                {
+                    showAlert(errorCode: 1)
+                    restartSession()
+                }
+        }
     }
     
     // AR Button Logic
+    @IBAction func backtoAlgoScreen(_ sender: UIButton)
+    {
+        performSegue(withIdentifier: "toAlgorithmOptions", sender: self)
+    }
+    
+    
+    @IBAction func toDetailsScreen(_ sender: UIButton)
+    {
+        if startNodeSelected && goalNodeSelected
+        {
+            performSegue(withIdentifier: "toDetailScreen", sender: self)
+        }
+        else
+        {
+            showAlert(errorCode: 0)
+        }
+    }
+    
+     // gets called just before segue occurs
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?)
+    {
+        if segue.identifier == "toAlgorithmOptions"
+        {
+
+        }
+        else if segue.identifier == "toDetailScreen"
+        {
+            let destinationVC = segue.destination as! pathDetailController
+            
+            // set bfs parameters
+            destinationVC.bfsPL = String(bfsPathModel.getPath().count)
+            destinationVC.bfsNE = String(bfsPathModel.getExploredLength())
+            destinationVC.bfsFL = String(bfsPathModel.getFrontierLength())
+            
+            // set dijkstra parameters
+            destinationVC.dijkstraPL = String(dijkstraPathModel.getPath().count)
+            destinationVC.dijkstraNE = String(dijkstraPathModel.getExploredLength())
+            destinationVC.dijkstraFL = String(dijkstraPathModel.getFrontierLength())
+
+            // set A* parameters
+            destinationVC.aStarPL = String(aStarPathModel.getPath().count)
+            destinationVC.aStarNE = String(aStarPathModel.getExploredLength())
+            destinationVC.aStarFL = String(aStarPathModel.getFrontierLength())
+        }
+    }
+    
+    
     @IBAction func obstacleButton(_ sender: UIButton)
     {
         self.obstacleButtonPushed = true
@@ -220,9 +364,13 @@ class ViewController: UIViewController, ARSCNViewDelegate
     func restartSession()
     {
         self.gridObject = Grid()    // create a new Grid
+        self.bfsPathModel = PathModel()
+        self.dijkstraPathModel = PathModel()
+        self.aStarPathModel = PathModel()
         groundPlaneFound = false
         startNodeSelected = false
         goalNodeSelected = false
+        
         sceneView.session.pause()
         sceneView.scene.rootNode.enumerateChildNodes { (node, stop) in node.removeFromParentNode() }
         if let configuration = sceneView.session.configuration
@@ -238,12 +386,15 @@ class ViewController: UIViewController, ARSCNViewDelegate
         {
             //let algorithmStepper = AlgorithmStepper(currGrid: gridObject, heuristic: heuristicSelected)
             // pass along current grid to algorithm handler
-            let algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: algorithmSelected, heuristic: heuristicSelected)
-            algoHandler.runSelectedAlgorithm()
+            var tempPathModel = PathModel()
+            var algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: algorithmSelected, heuristic: heuristicSelected, pathModel: tempPathModel)
+            tempPathModel = algoHandler.runSelectedAlgorithm()
+            setPathParameters(currPathModel: tempPathModel, algoSelected: algorithmSelected)
+            
         }
         else
         {
-            showAlert()
+            showAlert(errorCode: 0)
         }
     }
     
@@ -252,14 +403,14 @@ class ViewController: UIViewController, ARSCNViewDelegate
         print(sender.titleLabel!.text!)
         if startNodeSelected && goalNodeSelected
         {
-            //let algorithmStepper = AlgorithmStepper(currGrid: gridObject, heuristic: heuristicSelected)
-            // pass along current grid to algorithm handler
-            let algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: sender.titleLabel!.text!, heuristic: heuristicSelected)
-            algoHandler.runSelectedAlgorithm()
+            var tempPathModel = PathModel()
+            var algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: sender.titleLabel!.text!, heuristic: heuristicSelected, pathModel: tempPathModel)
+            tempPathModel = algoHandler.runSelectedAlgorithm()
+            setPathParameters(currPathModel: tempPathModel, algoSelected: sender.titleLabel!.text!)
         }
         else
         {
-            showAlert()
+            showAlert(errorCode: 0)
         }
         
     }
@@ -269,18 +420,16 @@ class ViewController: UIViewController, ARSCNViewDelegate
         print(sender.titleLabel!.text!)
         if startNodeSelected && goalNodeSelected
         {
-            //let algorithmStepper = AlgorithmStepper(currGrid: gridObject, heuristic: heuristicSelected)
-            // pass along current grid to algorithm handler
-            let algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: sender.titleLabel!.text!, heuristic: heuristicSelected)
-            algoHandler.runSelectedAlgorithm()
+            var tempPathModel = PathModel()
+            var algoHandler = AlgorithmHandler(currGrid: gridObject, algorithm: sender.titleLabel!.text!, heuristic: heuristicSelected, pathModel: tempPathModel)
+            tempPathModel = algoHandler.runSelectedAlgorithm()
+            setPathParameters(currPathModel: tempPathModel, algoSelected: sender.titleLabel!.text!)
         }
         else
         {
-            showAlert()
+            showAlert(errorCode: 0)
         }
     }
-    
-    
 }
 
 extension ViewController: ARCoachingOverlayViewDelegate {
@@ -304,3 +453,4 @@ extension ViewController: ARCoachingOverlayViewDelegate {
     print("DID THE COACHING THING!")
   }
 }
+

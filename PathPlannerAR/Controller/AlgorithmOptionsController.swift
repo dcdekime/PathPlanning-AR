@@ -100,13 +100,13 @@ class AlgorithmOptionsController: UIViewController, UIPickerViewDataSource, UIPi
     
     @IBAction func transferToARScreen(_ sender: UIButton)
     {
-        performSegue(withIdentifier: "TeeHee", sender: self)
+        performSegue(withIdentifier: "toAR", sender: self)
     }
     
     // gets called just before segue occurs
     override func prepare(for segue: UIStoryboardSegue, sender: Any?)
     {
-        if segue.identifier == "TeeHee"
+        if segue.identifier == "toAR"
         {
             // initialize object of ResultViewController class and set bmi value so that the proper value gets set before second screen loads
             let destinationVC = segue.destination as! ViewController
@@ -115,5 +115,4 @@ class AlgorithmOptionsController: UIViewController, UIPickerViewDataSource, UIPi
 
         }
     }
-    
 }
