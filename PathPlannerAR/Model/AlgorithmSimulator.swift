@@ -197,6 +197,8 @@ class AlgorithmSimulator : AlgorithmCommon
         {
         case "Euclidean Distance":
             activeHeuristic = calculateEuclideanDistance(currentNode:nextNode:)
+        case "Manhattan Distance":
+            activeHeuristic = calculateManhattanDistancecurrentNode(currentNode:nextNode:)
         default:
             activeHeuristic = calculateEuclideanDistance(currentNode:nextNode:)
         }

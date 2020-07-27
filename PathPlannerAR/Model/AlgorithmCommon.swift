@@ -15,11 +15,20 @@ class AlgorithmCommon
     public func calculateEuclideanDistance(currentNode: SCNNode, nextNode: SCNNode) -> Float
     {
         // XZ plane
-        let absDiffX = currentNode.position.x - nextNode.position.x
-        let absDiffZ = currentNode.position.z - nextNode.position.z
-        let straightLineDistance = sqrtf(pow(absDiffX,2) + pow(absDiffZ,2))
+        let DiffX = currentNode.position.x - nextNode.position.x
+        let DiffZ = currentNode.position.z - nextNode.position.z
+        let straightLineDistance = sqrtf(pow(DiffX,2) + pow(DiffZ,2))
         
         return straightLineDistance
+    }
+    
+    public func calculateManhattanDistancecurrentNode(currentNode: SCNNode, nextNode: SCNNode) -> Float
+    {
+        let absDiffX = abs(currentNode.position.x - nextNode.position.x)
+        let absDiffZ = abs(currentNode.position.z - nextNode.position.z)
+        let manhattanDistance = absDiffX + absDiffZ
+        
+        return manhattanDistance
     }
     
     public func getCurrentNodeIndex(pointCloudArray: [[SCNNode]], nodeID: String) -> (Int,Int)
