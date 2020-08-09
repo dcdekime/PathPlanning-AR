@@ -19,7 +19,7 @@ more engaging 3D visualization.
 
 
 ## Functional Demo:
-[![PathPlanning-AR Demo](https://www.youtube.com/watch?v=ELSpLAUXHBI "PathPlanning-AR")
+[PathPlanning-AR Demo](https://www.youtube.com/watch?v=ELSpLAUXHBI "PathPlanning-AR")
 
 
 ## Additional Content:
