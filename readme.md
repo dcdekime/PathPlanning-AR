@@ -22,4 +22,4 @@ Functional Demo:
 
 ![Project Presentation](https://drive.google.com/file/d/1MLhjE8Mdm0tJEkBtfTFaJGJbLs265qHO/view?usp=sharing)
 ![Project Paper ](https://drive.google.com/file/d/1FsdKmLAWSuak90svaVKqutsq_mswiUcQ/view?usp=sharing)
-![Functional Demo Video](https://www.youtube.com/watch?v=ELSpLAUXHBI)
+[![Audi R8](http://img.youtube.com/vi/KOxbO0EI4MA/0.jpg)](https://www.youtube.com/watch?v=KOxbO0EI4MA "Audi R8")
