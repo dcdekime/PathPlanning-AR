@@ -18,8 +18,10 @@ more engaging 3D visualization.
 - [ ] RealityKit
 
 
-Functional Demo:
+## Functional Demo:
+[![PathPlanning-AR Demo](http://img.youtube.com/vi/KOxbO0EI4MA/0.jpg)](https://www.youtube.com/watch?v=ELSpLAUXHBI "PathPlanning-AR")
 
-![Project Presentation](https://drive.google.com/file/d/1MLhjE8Mdm0tJEkBtfTFaJGJbLs265qHO/view?usp=sharing)
-![Project Paper ](https://drive.google.com/file/d/1FsdKmLAWSuak90svaVKqutsq_mswiUcQ/view?usp=sharing)
-[![Audi R8](http://img.youtube.com/vi/KOxbO0EI4MA/0.jpg)](https://www.youtube.com/watch?v=KOxbO0EI4MA "Audi R8")
+
+## Additional Content:
+[![Project Presentation](https://drive.google.com/file/d/1MLhjE8Mdm0tJEkBtfTFaJGJbLs265qHO/view?usp=sharing)]
+[![Project Paper ](https://drive.google.com/file/d/1FsdKmLAWSuak90svaVKqutsq_mswiUcQ/view?usp=sharing)]
